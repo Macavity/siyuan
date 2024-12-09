@@ -18,10 +18,23 @@ interface windowOptions {
     height?: number
 }
 
+function getNewWindowPath(json = {}){
+    let publicPath;
+    /// #if BROWSER
+    publicPath = "stage/build/desktop/index.html";
+    /// #else
+    publicPath = "stage/build/app/window.html";
+    /// #endif
+
+    return `${window.location.protocol}//${window.location.host}/${publicPath}?v=${Constants.SIYUAN_VERSION}&json=${encodeURIComponent(JSON.stringify(json))}`;
+}
+
 export const openNewWindow = (tab: Tab, options: windowOptions = {}) => {
     const json = {};
     layoutToJSON(tab, json);
-    /// #if !BROWSER
+    /// #if BROWSER
+    window.open(getNewWindowPath(json), "_blank", `width=${options.width || 800},height=${options.height || 600}`);
+    /// #else
     ipcRenderer.send(Constants.SIYUAN_OPEN_WINDOW, {
         position: options.position,
         width: options.width,
@@ -62,12 +75,15 @@ export const openNewWindowById = async (id: string | string[], options: windowOp
             }
         });
     }
-    /// #if !BROWSER
+    
+    /// #if BROWSER
+    window.open(getNewWindowPath(json), "_blank", `width=${options.width || 800},height=${options.height || 600}`);
+    /// #else
     ipcRenderer.send(Constants.SIYUAN_OPEN_WINDOW, {
         position: options.position,
         width: options.width,
         height: options.height,
-        url: `${window.location.protocol}//${window.location.host}/stage/build/app/window.html?v=${Constants.SIYUAN_VERSION}&json=${encodeURIComponent(JSON.stringify(json))}`
+        url: getNewWindowPath(json),
     });
     /// #endif
 };
