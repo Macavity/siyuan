@@ -1,7 +1,5 @@
 import {layoutToJSON} from "../layout/util";
-/// #if !BROWSER
 import {ipcRenderer} from "electron";
-/// #endif
 import {Constants} from "../constants";
 import {Tab} from "../layout/Tab";
 import {fetchSyncPost} from "../util/fetch";
