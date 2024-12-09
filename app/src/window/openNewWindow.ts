@@ -62,14 +62,12 @@ export const openNewWindowById = async (id: string | string[], options: windowOp
             }
         });
     }
-    /// #if !BROWSER
     ipcRenderer.send(Constants.SIYUAN_OPEN_WINDOW, {
         position: options.position,
         width: options.width,
         height: options.height,
         url: `${window.location.protocol}//${window.location.host}/stage/build/app/window.html?v=${Constants.SIYUAN_VERSION}&json=${encodeURIComponent(JSON.stringify(json))}`
     });
-    /// #endif
 };
 
 export const openAssetNewWindow = (assetPath: string, options: windowOptions = {}) => {
